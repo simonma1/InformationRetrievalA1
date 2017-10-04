@@ -2,4 +2,9 @@ import BeautifulSoup
 
 
 def create_parsed_text(filename):
-    return BeautifulSoup.BeautifulSoup(filename)
+    soup = BeautifulSoup.BeautifulSoup(filename)
+    return soup.findAll('reuters')
+
+
+
+

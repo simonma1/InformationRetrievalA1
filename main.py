@@ -1,19 +1,7 @@
-from file_access import open_file
-from tokenizer import gettokenlist
-from parser_module import create_parsed_text
+from token_stream import get_token_stream
 
+list = get_token_stream()
 
-fileRead = open_file("Reuters/reut2-000.sgm")
-
-soup = create_parsed_text(fileRead)
-
-
-titleList = soup('title')
-
-print gettokenlist(titleList)
-
-
-
-
-
-
+print len(list)
+print list.pop(0)
+print list.pop(len(list) - 7)

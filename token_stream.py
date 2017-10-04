@@ -1,0 +1,62 @@
+from file_access import open_file
+from tokenizer import gettokenlist
+from parser_module import create_parsed_text
+from token_class import Token
+
+
+#Next: normalization which will give a list of terms
+#Normalization can include: case folding, number removal, stopword, stemming, Design Decisions(USA vs U-S-A)
+
+def get_token_stream():
+    fileRead = open_file("Reuters/reut2-000.sgm")
+    documentList = create_parsed_text(fileRead)
+    tokenList = list()  # stream of Token objects(term and docId)
+    for doc in documentList:
+        docTermList = parse_doc(doc)
+        tokenList.extend(docTermList)
+        print '--------------'
+
+    return tokenList
+
+
+def parse_doc(doc):
+    docId = doc.get('newid')  # gets the id for the document
+    # print val('title')
+    parsedText = doc.find('body')  # parses the file by body tag
+    if (parsedText != None):
+        parsedText = parsedText.contents  # gets only the content between the tags
+        tokenizedTermList = gettokenlist(parsedText)  # tokenizes the content
+
+        term_list = get_list_of_terms(tokenizedTermList, docId)
+        return term_list
+    else:
+        return list()
+
+
+def get_list_of_terms(tokenizedTermList, docId):
+    token_list = list()
+    # Loops through all the terms in the document and adds them to the list with their associated docId
+    for term in tokenizedTermList:
+        tokenObj = Token(term, docId)
+        token_list.append(tokenObj)
+        # print tokenObj
+
+    return token_list
+
+
+'''
+1. get id from newid \\\
+2. create function to parse title and text
+3. associate the id to each token in inverted index\\\
+4. Repeat for all document in the folder 
+'''
+
+
+
+#Minimum to tokenize is title and text
+#Take docId from reteurs element newid
+
+
+
+
+

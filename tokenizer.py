@@ -18,5 +18,5 @@ def gettokenlist(list):
 
 
 #example
-s1 = "hello my name is gipsy"
-s2 = nltk.word_tokenize(s1)
+# s1 = "hello my name is gipsy"
+# s2 = nltk.word_tokenize(s1)
