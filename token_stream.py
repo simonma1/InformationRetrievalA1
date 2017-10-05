@@ -4,8 +4,8 @@ from parser_module import create_parsed_text
 from token_class import Token
 
 
-#Next: normalization which will give a list of terms
-#Normalization can include: case folding, number removal, stopword, stemming, Design Decisions(USA vs U-S-A)
+# Next: normalization which will give a list of terms
+# Normalization can include: case folding, number removal, stopword, stemming, Design Decisions(USA vs U-S-A)
 
 def get_token_stream():
     fileRead = open_file("Reuters/reut2-000.sgm")
@@ -14,7 +14,7 @@ def get_token_stream():
     for doc in documentList:
         docTermList = parse_doc(doc)
         tokenList.extend(docTermList)
-        print '--------------'
+
 
     return tokenList
 
@@ -37,11 +37,34 @@ def get_list_of_terms(tokenizedTermList, docId):
     token_list = list()
     # Loops through all the terms in the document and adds them to the list with their associated docId
     for term in tokenizedTermList:
-        tokenObj = Token(term, docId)
-        token_list.append(tokenObj)
-        # print tokenObj
+        term = normalize(term)
+        if term != '':
+            tokenObj = Token(term, docId)
+            token_list.append(tokenObj)
+            # print tokenObj
 
     return token_list
+
+def normalize(term):
+    term = removePunctuation(term)
+    term = removeStopwords(term)
+    term = term.lower()
+    return term
+
+def removePunctuation(term):
+    symbols = ['.', ',', '!', '?', '\'s', ';', '>', '(', ')']
+    for sym in symbols:
+        term = term.replace(sym, '')
+
+    return term
+
+def removeStopwords(term):
+    stop_words = ['a', 'the', 'is', 'and', '&']
+    for word in stop_words:
+        if word == term:
+            return ''
+
+    return term
 
 
 '''
@@ -53,10 +76,5 @@ def get_list_of_terms(tokenizedTermList, docId):
 
 
 
-#Minimum to tokenize is title and text
-#Take docId from reteurs element newid
-
-
-
-
-
+# Minimum to tokenize is title and text
+# Take docId from reteurs element newid
