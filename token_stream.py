@@ -39,7 +39,7 @@ def get_list_of_terms(tokenizedTermList, docId):
     for term in tokenizedTermList:
         term = normalize(term)
         if term != '':
-            tokenObj = Token(term, docId)
+            tokenObj = Token(term.encode('UTF8'), docId.encode('UTF8'))
             token_list.append(tokenObj)
             # print tokenObj
 
