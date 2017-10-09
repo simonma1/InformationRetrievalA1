@@ -1,15 +1,22 @@
 from token_stream import get_token_stream
 from spimi import spimi_invert
+from file_access import read_posting_list
+import postings_search
 
-stream = get_token_stream()
-block_size = 500000
-file_name_list = list()
+# stream = get_token_stream()
+# block_size = 500000
+# file_name_list = list()
+#
+# while(len(stream) != 0):
+#     file_name = spimi_invert(stream, block_size, len(file_name_list))
+#     file_name_list.append(file_name)
 
-while(len(stream) != 0):
-    file_name = spimi_invert(stream, block_size, len(file_name_list))
-    file_name_list.append(file_name)
+# print file_name_list
 
-print file_name_list
+postings = read_posting_list('savefile0.txt')
+
+#result = postings_search.searchAnd(postings, ['will', 'with', 'which'])
+
 
 #Merge files:
 #open buffer to all files
