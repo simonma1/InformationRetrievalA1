@@ -1,6 +1,7 @@
 from token_stream import get_token_stream
 from spimi import spimi_invert
 from file_access import read_posting_list
+from file_access import merge_postings
 import postings_search
 
 # stream = get_token_stream()
@@ -13,7 +14,12 @@ import postings_search
 
 # print file_name_list
 
-postings = read_posting_list('savefile0.txt')
+file_name_list = ['savefile0.txt', 'savefile1.txt', 'savefile2.txt', 'savefile3.txt']
+
+merge_postings(file_name_list)
+
+#reads in the final posting list
+#postings = read_posting_list('savefile0.txt')
 
 #result = postings_search.searchAnd(postings, ['will', 'with', 'which'])
 
