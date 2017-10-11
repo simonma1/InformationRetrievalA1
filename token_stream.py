@@ -52,7 +52,7 @@ def normalize(term):
     return term
 
 def removePunctuation(term):
-    symbols = ['.', ',', '!', '?', '\'s', ';', '>', '(', ')']
+    symbols = ['.', ',', '!', '?', '\'s', ';', '>', '(', ')', '#', '\'']
     for sym in symbols:
         term = term.replace(sym, '')
 

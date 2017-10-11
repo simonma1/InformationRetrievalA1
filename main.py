@@ -4,37 +4,71 @@ from file_access import read_posting_list
 from file_access import merge_postings
 import postings_search
 
-# stream = get_token_stream()
-# block_size = 500000
-# file_name_list = list()
-#
-# while(len(stream) != 0):
-#     file_name = spimi_invert(stream, block_size, len(file_name_list))
-#     file_name_list.append(file_name)
+memory_size = None
+escape_layout = "----------------------------"
 
-# print file_name_list
+while (not(isinstance(memory_size, (int, long, float)))):
+    try:
+        memory_size = input("Enter the desired memory size: \n")
+    except:
+        print "Please enter a number\n"
 
-file_name_list = ['savefile0.txt', 'savefile1.txt', 'savefile2.txt', 'savefile3.txt']
+print escape_layout
+print "Tokenizing"
+stream = get_token_stream()
+print "Documents Tokenized"
+print escape_layout
 
+file_name_list = list()
+
+print "Executing SPIMI "
+while(len(stream) != 0):
+    file_name = spimi_invert(stream, memory_size, len(file_name_list))
+    file_name_list.append(file_name)
+
+print "SPIMI Completed"
+print escape_layout
+
+print "Merging Postings"
 merge_postings(file_name_list)
+print "Postings Merged"
+print escape_layout
 
 #reads in the final posting list
-#postings = read_posting_list('savefile0.txt')
+invertedIndex = read_posting_list('results.txt')
 
-#result = postings_search.searchAnd(postings, ['will', 'with', 'which'])
+continue_queries = True
+
+while (continue_queries):
+    word_query = []
+    word = raw_input("Enter the word you are looking for: ")
+    if(word != ""):
+        word_query.append(word)
+        while (word != ""):
+            word = raw_input("Enter another word or leave it blank to stop: ")
+            if(word != ""):
+                word_query.append(word)
+            else:
+                if(len(word_query) == 1):
+                    result = postings_search.search(invertedIndex, word_query[0])
+                    print result
+                else:
+                    query_type = None
+                    while(query_type != 1 and query_type != 2):
+                        try:
+                            query_type = input("For an AND query enter 1, for an OR query enter 2: \n")
+                        except:
+                            print "Please enter a number\n"
+
+                    if(query_type == 1):
+                        result = postings_search.searchAnd(invertedIndex, word_query)
+                        print result
+                    elif(query_type == 2):
+                        print "To be implemented"
+        print escape_layout
+    else:
+        continue_queries = False
 
 
-#Merge files:
-#open buffer to all files
-#Find term with highest priority
-#Merged all postings list for that term
-#Write to disk
-#Get next postings from that block
 
-
-
-
-
-#Could implement block limitation has a limit on terms, but better to use bytes if possible
-#Can merge everything in memory, has long as block are saved on disk
 #When querying, execute same normalization as before
