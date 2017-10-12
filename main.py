@@ -64,7 +64,8 @@ while (continue_queries):
                         result = postings_search.searchAnd(invertedIndex, word_query)
                         print result
                     elif(query_type == 2):
-                        print "To be implemented"
+                        result = postings_search.searchOr(invertedIndex, word_query)
+                        print result
         print escape_layout
     else:
         continue_queries = False

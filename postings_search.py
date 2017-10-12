@@ -1,9 +1,17 @@
 from collections import defaultdict
+from copy import deepcopy
 
 def search(dict, term):
     if(len(dict[term]) == 0):
         return "Sorry no results were found"
     return dict[term]
+
+def searchOr(dict, terms):
+    result = []
+    for term in terms:
+        result = union(result, deepcopy(dict[term]))
+    return result
+
 
 
 def searchAnd(dict, terms):
@@ -21,12 +29,38 @@ def searchAnd(dict, terms):
 
     while (len(tempDict) > 0):
         smallest_term = findSmallestList(tempDict)
-        result = intersect(result, tempDict[smallest_term])
+        result = intersect(result, deepcopy(tempDict[smallest_term]))
         del (tempDict[smallest_term])
 
     return result
 
+def union(result, other_list):
+    result_next = check_if_list_empty(result)
+    other_next = check_if_list_empty(other_list)
+    answer = []
 
+    while (result_next != None or other_next != None):
+        if(result_next == None):
+            answer.insert(len(answer), other_next)
+            answer.extend(other_list)
+            other_next = None
+        elif(other_next == None):
+            answer.insert(len(answer), result_next)
+            answer.extend(result)
+            result_next = None
+        else:
+            if(other_next < result_next):
+                answer.insert(len(answer), other_next)
+                other_next = check_if_list_empty(other_list)
+            elif(result_next < other_next):
+                answer.insert(len(answer), result_next)
+                result_next = check_if_list_empty(result)
+            else:
+                answer.insert(len(answer), result_next)
+                result_next = check_if_list_empty(result)
+                other_next = check_if_list_empty(other_list)
+
+    return answer
 
 def findSmallestList(dict):
     termOfSmallest = ""
@@ -39,9 +73,9 @@ def findSmallestList(dict):
 
     return termOfSmallest
 
-def intersect(result, otherList):
+def intersect(result, other_list):
     result_next = result.pop(0)
-    other_next = otherList.pop(0)
+    other_next = other_list.pop(0)
     answer = []
 
     while(result_next != None and other_next != None):
@@ -49,9 +83,9 @@ def intersect(result, otherList):
         if(result_next == other_next):
             answer.insert(len(answer),result_next)
             result_next = check_if_list_empty(result)
-            other_next = check_if_list_empty(otherList)
+            other_next = check_if_list_empty(other_list)
         elif(result_next > other_next):
-            other_next = check_if_list_empty(otherList)
+            other_next = check_if_list_empty(other_list)
         else:
             result_next = check_if_list_empty(result)
 
