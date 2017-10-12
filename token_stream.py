@@ -23,8 +23,14 @@ def parse_doc(doc):
     docId = doc.get('newid')  # gets the id for the document
     # print val('title')
     parsedText = doc.find('body')  # parses the file by body tag
+    parsedTitle = doc.find('title') #parses the title tag
     if (parsedText != None):
         parsedText = parsedText.contents  # gets only the content between the tags
+
+        #Adds the term from the title tag
+        if(parsedTitle != None):
+            parsedText.extend(parsedTitle.contents)#adds the titlt tag to the list of terms to be tokenized
+
         tokenizedTermList = gettokenlist(parsedText)  # tokenizes the content
 
         term_list = get_list_of_terms(tokenizedTermList, docId)
@@ -33,15 +39,19 @@ def parse_doc(doc):
         return list()
 
 
+
 def get_list_of_terms(tokenizedTermList, docId):
     token_list = list()
+    term_dict = list()
     # Loops through all the terms in the document and adds them to the list with their associated docId
     for term in tokenizedTermList:
         term = normalize(term)
         if term != '':
-            tokenObj = Token(term.encode('UTF8'), docId.encode('UTF8'))
-            token_list.append(tokenObj)
-            # print tokenObj
+            if(not(term in term_dict)):
+                tokenObj = Token(term.encode('UTF8'), docId.encode('UTF8'))
+                token_list.append(tokenObj)
+                term_dict.append(term)
+                # print tokenObj
 
     return token_list
 
