@@ -1,7 +1,9 @@
 from collections import defaultdict
 from copy import deepcopy
+from normalization import normalize
 
 def search(dict, term):
+    term = normalize(term)
     if(len(dict[term]) == 0):
         return "Sorry no results were found"
     return dict[term]
@@ -9,6 +11,7 @@ def search(dict, term):
 def searchOr(dict, terms):
     result = []
     for term in terms:
+        term = normalize(term)
         result = union(result, deepcopy(dict[term]))
     return result
 
@@ -18,6 +21,7 @@ def searchAnd(dict, terms):
     tempDict = defaultdict(list)
     result = []
     for term in terms:
+        term = normalize(term)
         tempDict[term].extend(dict[term])#will get the postings list for each term
         if (len(tempDict[term])==0):
             return "The word you are looking for could not be found."
