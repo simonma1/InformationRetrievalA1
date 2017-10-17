@@ -33,14 +33,20 @@ def indexation():
     print "Postings Merged"
     print escape_layout
 
-
-#indexation()
+#Comment out this part to only execute queries on the result file
+indexation()
 
 #reads in the final posting list
 invertedIndex = read_posting_list('results.txt')
 
 continue_queries = True
 
+#Get the size of each list
+# print "Dictionary size: " + str(len(invertedIndex))
+# total_length_posting = 0
+# for key, value in invertedIndex.iteritems():
+#     total_length_posting += len(value)
+# print "Postings size: " + str(total_length_posting)
 
 while continue_queries:
     query = raw_input("Enter the word or words you are looking for. Type 'or' at the end for a conjunctive query. Leave the field blank to stop: ")
@@ -60,6 +66,3 @@ while continue_queries:
     else:
         print 'Thank you. Have a nice day'
         continue_queries = False
-
-
-#When querying, execute same normalization as before

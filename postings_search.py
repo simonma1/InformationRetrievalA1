@@ -22,9 +22,10 @@ def searchAnd(dict, terms):
     result = []
     for term in terms:
         term = normalize(term)
-        tempDict[term].extend(dict[term])#will get the postings list for each term
-        if (len(tempDict[term])==0):
-            return "The word you are looking for could not be found."
+        if(term != ""):
+            tempDict[term].extend(dict[term])#will get the postings list for each term
+            if (len(tempDict[term])==0):
+                return "The word you are looking for could not be found."
 
     # find the smallest index
     smallest_term = findSmallestList(tempDict)
