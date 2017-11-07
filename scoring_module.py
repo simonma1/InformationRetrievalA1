@@ -1,31 +1,34 @@
-"""
-1. Find all the docs that 1 of the terms occurs in, than add it to a dict. DONE
-2. For all doc in the list:
-    a. Find the RSV for that doc by summing the following for each term in the query:
-        I. log of [number of doc in the collection]/ # of doc that term occurs in
-        II. the rest of the function where tftd = term frequency in doc d, Ld = length of doc d, and Lavg = avg length of all doc
-
-"""
 from collections import defaultdict
+from normalization import normalize
 
 import math
 
+K1 = 1.5
+K3 = 1.5
+B = 0.75
+
 
 def bm_25(doc_len_arr, inverted_index, words, l_avg):
-    print "BMMM25"
+    print "EXECUTING BM25"
     result_list = defaultdict(int)
     num_doc_collection = len(doc_len_arr)
     doc_unranked = get_docs_containing_word(inverted_index, words)
-    print doc_unranked
+
+    print words
+    for w in words:
+        term = normalize(w)
+        if term == "":
+            words.remove(w)
+    print words
+
 
     words_freq_dict = get_frequencies(inverted_index, words)
 
     for doc in doc_unranked:
         d_length = doc_len_arr[doc]
         res = calculate_rsv(num_doc_collection, words_freq_dict, words, doc, d_length, l_avg)
-        print res
         result_list[res] = doc
-        #add return value to list
+        #adds return value to list where the score is the key and the doc the value
     return result_list
 
 def get_docs_containing_word(inverted_index, words):
@@ -56,10 +59,7 @@ def get_frequencies(inverted_index, words):
 
 def calculate_rsv(num_doc_collection, words_freq_dict, words, doc, d_length, l_avg):
     score = 0
-    k1 = 1.5
-    b = 0.75
     for word in words:
-        print "------------"
         dft = len(words_freq_dict[word])
         #print words_freq_dict[word]
         if doc in words_freq_dict[word]:
@@ -68,19 +68,24 @@ def calculate_rsv(num_doc_collection, words_freq_dict, words, doc, d_length, l_a
             #If check not done like this would add it to the dict breaking the logic
             tf_td = 0
 
-        log_part = math.log(num_doc_collection/dft)
+        if(dft != 0):#To prevent division by 0 errors
+            log_part = math.log(num_doc_collection/dft)
+        else:
+            log_part = 0
 
-        numerator = (k1 + 1) * tf_td
-        denum = (k1 * ((1 - b) + (b * (d_length/l_avg)))) + tf_td
+        numerator = (K1 + 1) * tf_td
+        denum = (K1 * ((1 - B) + (B * (d_length/l_avg)))) + tf_td
 
         word_score = (log_part * numerator)/denum
         score += word_score # does the summation of all the word score for that doc
-        # print "NUM: " + str(numerator)
-        # print "DENUM: " + str(denum)
-        # print "LOOG : " + str(log_part)
-        # print "dft: " + str(dft) + " total docs: " + str(num_doc_collection)
-        print "------------"
 
+        tf_tq = 0
+        if len(words) > 3: # For long queries only
+            #Takes into account how often the word was in the query
+            for w in words:
+                if word == word:
+                    tf_tq += 1
+            long_query_score = (((K3 + 1)*tf_tq))/(K3 + tf_tq)
 
     return score
 

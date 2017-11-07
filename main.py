@@ -37,9 +37,10 @@ def indexation():
 #indexation()
 
 #Get number of words per doc
+#This is done here so that this index compilation will only be done once.
+#It will read the documents length from a file to bypass having to recompile the entire index over again.
 doc_len_arr = get_doc_len()
 l_avg = 0
-
 for doc in doc_len_arr:
     l_avg += doc
 
@@ -54,11 +55,15 @@ while continue_queries:
     query = raw_input("Enter the word or words you are looking for. Leave the field blank to stop: ")
     if(query != ""):
         words = query.split()
+        #Calls the execution of the BM25 algorithm
         result_list = bm_25(doc_len_arr, invertedIndex, words, l_avg)
-        print result_list
 
+        # Iterates over the results and prints them in order from highest match to lowest
+        it = 1
+        print "\n\nHERE ARE THE RESULTS FOR THE RANKED SEARCH:"
         for key, value in sorted(result_list.items(), reverse=True):
-            print(key, value)
+            print(str(it) + ". Document number " + str(value) + " with a score of: " + str(key))
+            it += 1
     else:
         print 'Thank you. Have a nice day'
         continue_queries = False
