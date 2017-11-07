@@ -1,4 +1,4 @@
-from file_access import open_file
+from file_access import open_file, save_doc_len
 from tokenizer import gettokenlist
 from parser_module import create_parsed_text
 from token_class import Token
@@ -11,13 +11,18 @@ import glob
 
 def get_token_stream():
     tokenList = list()  # stream of Token objects(term and docId)
+    doc_len_arr = []
     for file in glob.glob('Reuters/reut2-0*.sgm'):
         print file
         fileRead = open_file(file)
         documentList = create_parsed_text(fileRead)
         for doc in documentList:
-            docTermList = parse_doc(doc)
+            docTermList, doc_id = parse_doc(doc)
             tokenList.extend(docTermList)
+
+            doc_len_arr.insert(int(doc_id), len(docTermList))
+
+    save_doc_len(doc_len_arr)
 
 
     return tokenList
@@ -38,9 +43,9 @@ def parse_doc(doc):
         tokenizedTermList = gettokenlist(parsedText)  # tokenizes the content
 
         term_list = get_list_of_terms(tokenizedTermList, docId)
-        return term_list
+        return term_list, docId
     else:
-        return list()
+        return list(), docId
 
 
 
@@ -54,8 +59,8 @@ def get_list_of_terms(tokenizedTermList, docId):
             if(not(term in term_dict)):
                 tokenObj = Token(term.encode('UTF8'), docId.encode('UTF8'))
                 token_list.append(tokenObj)
-                term_dict.append(term)
-                # print tokenObj
+                #To remove duplicates uncomment the following
+                #term_dict.append(term)
 
     return token_list
 

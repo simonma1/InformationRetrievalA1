@@ -29,6 +29,25 @@ def read_posting_list(filename):
     return dict
 
 
+def save_doc_len(doc_len_list):
+    f = open('documents_length.txt', 'w')
+    for key, value in enumerate(doc_len_list):
+        f.write(str(key + 1) + ' ' + str(value) + "\n")
+
+def get_doc_len():
+    file = open('documents_length.txt', 'r')
+    doc_len_arr = []
+
+    for line in file:
+        line = line.split(' ', 1)
+        index = int(line[0])
+        count = int(line[1])
+        doc_len_arr.insert(index, count)
+
+    return doc_len_arr
+
+
+
 def merge_postings(postings_list):
     fs = {}
     postings_next_value = {}
