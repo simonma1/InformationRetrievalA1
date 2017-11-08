@@ -12,14 +12,17 @@ def bm_25(doc_len_arr, inverted_index, words, l_avg):
     print "EXECUTING BM25"
     result_list = defaultdict(int)
     num_doc_collection = len(doc_len_arr)
-    doc_unranked = get_docs_containing_word(inverted_index, words)
-
     print words
-    for w in words:
+    #performs normalization to stay consistent with the index
+    for i, w in enumerate(words):
         term = normalize(w)
         if term == "":
             words.remove(w)
+        else:
+            words[i] = term
+
     print words
+    doc_unranked = get_docs_containing_word(inverted_index, words)
 
 
     words_freq_dict = get_frequencies(inverted_index, words)
